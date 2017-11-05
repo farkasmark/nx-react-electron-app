@@ -1,20 +1,37 @@
-const electron = require('electron')
-// Module to control application life.
-const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+const {app, BrowserWindow } = require('electron')
+const windowStateKeeper = require('electron-window-state')
 
 const path = require('path')
 const url = require('url')
 const isDev = require('electron-is-dev')
+
+// Use Electron debug module
+require('electron-debug')({showDevTools: false})
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 900, height: 680})
+
+  // Load the previous state with fallback to defaults
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: 1280,
+    defaultHeight: 800
+  })
+
+  // Create the browser window using the state information
+  mainWindow = new BrowserWindow({
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height
+  })
+
+  // Let us register listeners on the window, so we can update the state
+  // automatically (the listeners will be removed when the window is closed)
+  // and restore the maximized or full screen state
+  mainWindowState.manage(mainWindow)
 
   const fileUrl = url.format({
     pathname: path.join(__dirname, '/../build/index.html'),
@@ -26,9 +43,6 @@ function createWindow () {
   const startUrl = process.env.ELECTRON_START_URL || fileUrl
 
   mainWindow.loadURL(isDev ? startUrl : fileUrl)
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
