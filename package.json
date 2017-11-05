@@ -1,0 +1,41 @@
+{
+  "name": "nexogen-react-electron-app",
+  "version": "0.1.0",
+  "description": "An electron application based on React and create-react-app tooling.",
+  "author": "NEXOGEN Kft.",
+  "private": true,
+  "devDependencies": {
+    "concurrently": "^3.5.0",
+    "cross-env": "^5.1.1",
+    "electron": "^1.7.9",
+    "electron-builder": "^19.45.0",
+    "react-scripts": "1.0.17",
+    "wait-on": "^2.0.2"
+  },
+  "dependencies": {
+    "electron-is-dev": "^0.3.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "main": "public/electron.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "cross-env BROWSER=none ELECTRON_START_URL=http://localhost:3000 concurrently \"react-scripts start\" \"wait-on $ELECTRON_START_URL && electron .\"",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "pack": "build --dir",
+    "dist": "yarn build && build",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "hu.nexogen.react-electron-app",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories":{
+      "buildResources": "public"
+    }
+  }
+}
