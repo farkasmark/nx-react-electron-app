@@ -1,5 +1,5 @@
 {
-  "name": "nexogen-react-electron-app",
+  "name": "nx-react-electron-app",
   "version": "0.1.0",
   "description": "An electron application based on React and create-react-app tooling.",
   "author": "NEXOGEN Kft.",
